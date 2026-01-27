@@ -37,10 +37,6 @@ export class UnifiAccess implements INodeType {
 						name: 'User',
 						value: 'user',
 					},
-					{
-						name: 'Company',
-						value: 'company',
-					},
 				],
 				default: 'user',
 			},
@@ -114,7 +110,7 @@ export class UnifiAccess implements INodeType {
               body['onboard_time'] = Math.floor(new Date(onboardTime).getTime() / 1000);
             }
             if (status) {
-              body['status'] = status.toUpperCase();
+              body['status'] = status;
             }
             responseData = await unifiAccessApiRequest.call(this, 'PUT', `/developer/users/${userId}`, body, {});
           }

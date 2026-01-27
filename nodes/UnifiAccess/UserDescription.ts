@@ -167,11 +167,11 @@ export const userFields: INodeProperties[] = [
       },
       {
         name: 'Active',
-        value: 'active',
+        value: 'ACTIVE',
       },
       {
         name: 'Deactivated',
-        value: 'deactivated',
+        value: 'DEACTIVATED',
       },
     ],
     displayOptions: {
