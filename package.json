@@ -1,0 +1,53 @@
+{
+  "name": "n8n-nodes-unifi-access",
+  "version": "0.1.0",
+  "description": "n8n node for accessing the Unifi Access API",
+  "license": "MIT",
+  "homepage": "",
+  "keywords": [
+    "n8n-community-node-package"
+  ],
+  "author": {
+    "name": "Rick Yorgason",
+    "email": "rick@firefang.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Skrapion/n8n-nodes-unifi-access.git"
+  },
+  "scripts": {
+    "build": "n8n-node build",
+    "build:watch": "tsc --watch",
+    "dev": "n8n-node dev",
+    "lint": "n8n-node lint",
+    "lint:fix": "n8n-node lint --fix",
+    "release": "n8n-node release",
+    "prepublishOnly": "n8n-node prerelease"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "strict": true,
+    "credentials": [
+      "dist/credentials/UnifiAccessApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/UnifiAccess/UnifiAccess.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@n8n/node-cli": "*",
+    "eslint": "9.32.0",
+    "globals": "^17.1.0",
+    "prettier": "3.6.2",
+    "release-it": "^19.0.4",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.54.0"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  }
+}
