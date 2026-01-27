@@ -81,7 +81,7 @@ export class UnifiAccess implements INodeType {
             if (onboardTime) {
               body['onboard_time'] = Math.floor(new Date(onboardTime).getTime() / 1000);
             }
-            responseData = await unifiAccessApiRequest.call(this, 'POST', '/developer/users', body, {});
+            responseData = await unifiAccessApiRequest.call(this, 'POST', 'users', body, {});
           }
           
           // 3.3 Update User
@@ -112,7 +112,7 @@ export class UnifiAccess implements INodeType {
             if (status) {
               body['status'] = status;
             }
-            responseData = await unifiAccessApiRequest.call(this, 'PUT', `/developer/users/${userId}`, body, {});
+            responseData = await unifiAccessApiRequest.call(this, 'PUT', `users/${userId}`, body, {});
           }
 
           // 3.4 Fetch User
@@ -127,7 +127,7 @@ export class UnifiAccess implements INodeType {
             if (expandAccessPolicies) {
               qs["expand[]"] = "access_policy"
             }
-            responseData = await unifiAccessApiRequest.call(this, 'GET', `/developer/users/${userId}`, {}, qs);
+            responseData = await unifiAccessApiRequest.call(this, 'GET', `users/${userId}`, {}, qs);
           }
 
           // 3.5 Fetch All Users
@@ -146,7 +146,7 @@ export class UnifiAccess implements INodeType {
               qs["page_num"] = 1;
               qs["page_size"] = limit;
             }
-						responseData = await unifiAccessApiRequest.call(this, 'GET', '/developer/users', {}, qs);
+						responseData = await unifiAccessApiRequest.call(this, 'GET', 'users', {}, qs);
 					}
 
           // 3.6 Assign Access Policy to User
@@ -163,11 +163,11 @@ export class UnifiAccess implements INodeType {
             } else {
 		          const qs: IDataObject = {};
               qs['expand[]'] = 'access_policy';
-              responseData = await unifiAccessApiRequest.call(this, 'GET', `/developer/users/${userId}`, {}, qs);
+              responseData = await unifiAccessApiRequest.call(this, 'GET', `users/${userId}`, {}, qs);
               body['access_policy_ids'] = [...new Set(accessPolicyIds.concat(responseData['access_policy_ids']))];
             }
 
-						responseData = await unifiAccessApiRequest.call(this, 'PUT', `/developer/users/${userId}/access_policies`, body, qs);
+						responseData = await unifiAccessApiRequest.call(this, 'PUT', `users/${userId}/access_policies`, body, qs);
           }
         }
 

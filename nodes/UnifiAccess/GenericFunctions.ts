@@ -28,7 +28,7 @@ export async function _unifiAccessApiRequestTest(
 		method,
 		qs,
 		body,
-		uri: `${credentials.url}/api/v1${url}`,
+		uri: `${credentials.url}/api/v1/developer/${url}`,
 		rejectUnauthorized: !credentials.allowUnauthorizedCerts,
 		json: true,
 	};
@@ -61,7 +61,7 @@ export async function unifiAccessApiRequest(
 		method,
 		qs,
 		body,
-		uri: `${credentials.url}/api/v1${url}`,
+		uri: `${credentials.url}/api/v1/developer/${url}`,
 		rejectUnauthorized: !credentials.allowUnauthorizedCerts,
 		json: true,
 	};
