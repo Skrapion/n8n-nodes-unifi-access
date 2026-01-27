@@ -58,7 +58,7 @@ export class UnifiAccessApi implements ICredentialType {
 	test: ICredentialTestRequest = {
 		request: {
 			baseURL: '={{$credentials?.url}}/api/v1',
-			url: '/developer/users',
+			url: '/developer/users?page_num=1&page_size=1',
       method: 'GET',
       skipSslCertificateValidation: '={{$credentials.allowUnauthorizedCerts}}',
 		},
