@@ -19,9 +19,29 @@ Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes
 
 ## Operations
 
-Currently support the nodes necessary to manage individual users as well as their access policies and credentials.
-
-Supports NFCs, PINs, and UniFi Identity invites. It also supports enrolling NFCs with a reader.
+* User Actions
+  * Assign access policies to a user
+  * Assign NFC card to a user
+  * Clear a user's PIN
+  * Create a new user
+  * Delete a user
+  * Get a user
+  * Get users
+  * Send UniFi Identity invitation
+  * Set a user's PIN
+  * Unassign an NFC card from a user
+  * Update a user
+* Access Policy Actions
+  * Get an access policy
+  * Get access policies
+* Credential Actions
+  * Delete an NFC card
+  * Enroll an NFC card
+  * Generate a random PIN
+  * Get NFC cards
+  * Get an NFC card
+* Device Actions
+  * Get devices
 
 ## Credentials
 
