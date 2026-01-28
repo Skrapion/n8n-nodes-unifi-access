@@ -7,7 +7,7 @@ import type {
 } from 'n8n-workflow';
 import { NodeConnectionTypes } from 'n8n-workflow';
 
-import { unifiAccessApiRequest, _unifiAccessApiRequestTest } from './GenericFunctions';
+import { unifiAccessApiRequest } from './GenericFunctions';
 import { userOperations, userFields } from './UserDescription';
 
 export class UnifiAccess implements INodeType {
@@ -142,7 +142,7 @@ export class UnifiAccess implements INodeType {
             if (expandAccessPolicies) {
               qs["expand[]"] = "access_policy"
             }
-            if (limit > 0) {
+            if (limit) {
               qs["page_num"] = 1;
               qs["page_size"] = limit;
             }
@@ -152,19 +152,23 @@ export class UnifiAccess implements INodeType {
           // 3.6 Assign Access Policy to User
           if (operation === 'assignAccessPolicy') {
             const userId = this.getNodeParameter('userId', i) as string;
-            const accessPolicyIds =
-	            (this.getNodeParameter('accessPolicyIds', i, {}) as any)
-		            .accessPolicy
-		            .map((h: any) => h.accessPolicyId);
+            const accessPolicyIds = (this.getNodeParameter('accessPolicyIds', i, {}) as IDataObject)
+            const accessPolicy = accessPolicyIds.accessPolicy as IDataObject[];
+            let accessPolicyIdArray: string[] = [];
+            if (accessPolicy) {
+              accessPolicyIdArray = accessPolicy.map((h: IDataObject) => h.accessPolicyId as string);
+            }
             const overwrite = this.getNodeParameter('overwrite', i) as boolean;
 
             if (overwrite) {
-              body['access_policy_ids'] = accessPolicyIds;
+              body['access_policy_ids'] = accessPolicyIdArray;
             } else {
 		          const qs: IDataObject = {};
               qs['expand[]'] = 'access_policy';
               responseData = await unifiAccessApiRequest.call(this, 'GET', `users/${userId}`, {}, qs);
-              body['access_policy_ids'] = [...new Set(accessPolicyIds.concat(responseData['access_policy_ids']))];
+              if (responseData.length == 1) {
+                body['access_policy_ids'] = [...new Set(accessPolicyIdArray.concat(responseData[0].access_policy_ids as string[]))];
+              }
             }
 
 						responseData = await unifiAccessApiRequest.call(this, 'PUT', `users/${userId}/access_policies`, body, qs);

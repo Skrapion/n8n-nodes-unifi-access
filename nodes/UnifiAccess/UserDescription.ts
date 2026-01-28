@@ -12,18 +12,18 @@ export const userOperations: INodeProperties[] = [
       },
 		},
 		options: [
+      {
+        name: 'Assign Access Policy',
+        value: 'assignAccessPolicy',
+        action: 'Assign access policies to a user',
+        description: 'Assign access policies to a user',
+      },
 			{
 				name: 'Create',
 				value: 'create',
 				action: 'Create a new user',
 				description: 'Create a new user',
 			},
-      {
-        name: 'Update',
-        value: 'update',
-        action: 'Update a user',
-        description: 'Update a user',
-      },
 			{
 				name: 'Get',
 				value: 'get',
@@ -37,10 +37,10 @@ export const userOperations: INodeProperties[] = [
 				description: 'Get many users',
 			},
       {
-        name: 'Assign Access Policy',
-        value: 'assignAccessPolicy',
-        action: 'Assign Access Policy to User',
-        description: 'Assign access policies to a user',
+        name: 'Update',
+        value: 'update',
+        action: 'Update a user',
+        description: 'Update a user',
       },
 		],
 		default: 'getAll',
@@ -60,7 +60,7 @@ export const userFields: INodeProperties[] = [
         operation: ['get', 'update', 'assignAccessPolicy']
       },
     },
-		description: "The user's id",
+		description: "The user's ID",
 	},
 	{
 		displayName: 'First Name',
@@ -117,10 +117,11 @@ export const userFields: INodeProperties[] = [
 		description: 'The last name of the user',
 	},
 	{
-		displayName: 'Email address',
+		displayName: 'Email Address',
 		name: 'email',
 		type: 'string',
 		default: '',
+    placeholder: 'name@email.com',
 		displayOptions: {
 			show: {
         resource: ['user'],
@@ -190,7 +191,7 @@ export const userFields: INodeProperties[] = [
     default: {},
     options: [
       {
-        displayName: 'Expand access policies?',
+        displayName: 'Expand Access Policies?',
         name: 'expandAccessPolicies',
         type: 'boolean',
         default: false,
@@ -212,7 +213,7 @@ export const userFields: INodeProperties[] = [
     default: {},
     options: [
       {
-        displayName: 'Expand access policies?',
+        displayName: 'Expand Access Policies?',
         name: 'expandAccessPolicies',
         type: 'boolean',
         default: false,
@@ -222,8 +223,12 @@ export const userFields: INodeProperties[] = [
         displayName: 'Limit',
         name: 'limit',
         type: 'number',
-        default: 0,
-        description: 'How many users to return',
+        default: 50,
+        description: 'Max number of results to return',
+        typeOptions: {
+          minValue: 1,
+          step: 1,
+        }
       }
     ],
     displayOptions: { 
@@ -238,7 +243,7 @@ export const userFields: INodeProperties[] = [
     name: 'accessPolicyIds',
     type: 'fixedCollection',
     placeholder: 'Add Policy',
-    default: '',
+    default: [],
     displayOptions: {
       show: {
         resource: ['user'],

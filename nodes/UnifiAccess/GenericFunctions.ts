@@ -4,55 +4,23 @@ import type {
 	IDataObject,
 	JsonObject,
 	IHttpRequestMethods,
-	IRequestOptions,
+	IHttpRequestOptions,
 } from 'n8n-workflow';
 import { NodeApiError } from 'n8n-workflow';
-
-export async function _unifiAccessApiRequestTest(
-	this: IExecuteFunctions | ILoadOptionsFunctions,
-	method: IHttpRequestMethods,
-	url: string,
-
-	body: any = {},
-	qs: IDataObject = {},
-	option: IDataObject = {},
-): Promise<any> {
-	const credentials = await this.getCredentials('unifiAccessApi');
-
-	let options: IRequestOptions = {
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			'User-Agent': 'n8n',
-		},
-		method,
-		qs,
-		body,
-		uri: `${credentials.url}/api/v1/developer/${url}`,
-		rejectUnauthorized: !credentials.allowUnauthorizedCerts,
-		json: true,
-	};
-	options = Object.assign({}, options, option);
-	if (Object.keys(options.body as IDataObject).length === 0) {
-		delete options.body;
-	}
-  let err = "Url: " + options.uri + "\nBody: " + JSON.stringify(options.body) +
-    "\nMethod: " + options.method + "\nqs: " + JSON.stringify(options.qs);
-  throw new NodeApiError(this.getNode(), {'message': err} as JsonObject);
-}
+//import util from 'util';
 
 export async function unifiAccessApiRequest(
 	this: IExecuteFunctions | ILoadOptionsFunctions,
 	method: IHttpRequestMethods,
 	url: string,
 
-	body: any = {},
+	body: IDataObject = {},
 	qs: IDataObject = {},
 	option: IDataObject = {},
-): Promise<any> {
+): Promise<IDataObject[]> {
 	const credentials = await this.getCredentials('unifiAccessApi');
 
-	let options: IRequestOptions = {
+	let options: IHttpRequestOptions = {
 		headers: {
 			Accept: 'application/json',
 			'Content-Type': 'application/json',
@@ -61,10 +29,18 @@ export async function unifiAccessApiRequest(
 		method,
 		qs,
 		body,
-		uri: `${credentials.url}/api/v1/developer/${url}`,
-		rejectUnauthorized: !credentials.allowUnauthorizedCerts,
+		url: `${credentials.url}/api/v1/developer/${url}`,
+		skipSslCertificateValidation: true,//credentials.allowUnauthorizedCerts as boolean,
 		json: true,
 	};
+
+  /*
+  console.log("Url: ", options.url);
+  console.log("Body: ", JSON.stringify(options.body));
+  console.log("Method: ", options.method);
+  console.log("qs: ", JSON.stringify(options.qs));
+  */
+
 	options = Object.assign({}, options, option);
 	if (Object.keys(options.body as IDataObject).length === 0) {
 		delete options.body;
@@ -74,16 +50,21 @@ export async function unifiAccessApiRequest(
 
 	try {
 		const credentialType = 'unifiAccessApi';
-		result = await this.helpers.requestWithAuthentication.call(this, credentialType, options);
+		result = await this.helpers.httpRequestWithAuthentication.call(this, credentialType, options);
 	} catch (error) {
 		throw new NodeApiError(this.getNode(), error as JsonObject);
 	}
 
   if (result.code == "SUCCESS") {
+    //console.log("Result.data: ", util.inspect(result.data, {depth: null, colors: true}));
     if (result.data) {
-      return result.data;
+      if (Array.isArray(result.data)) {
+        return result.data;
+      } else {
+        return [result.data];
+      }
     } else {
-      return '';
+      return [{}];
     }
   } else {
     const errorOptions = {
