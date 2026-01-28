@@ -30,7 +30,7 @@ export async function unifiAccessApiRequest(
 		qs,
 		body,
 		url: `${credentials.url}/api/v1/developer/${url}`,
-		skipSslCertificateValidation: true,//credentials.allowUnauthorizedCerts as boolean,
+		skipSslCertificateValidation: credentials.allowUnauthorizedCerts as boolean,
 		json: true,
 	};
 
@@ -60,6 +60,8 @@ export async function unifiAccessApiRequest(
     if (result.data) {
       if (Array.isArray(result.data)) {
         return result.data;
+      } else if (option.resultName) {
+        return [{[option.resultName as string]: result.data}];
       } else {
         return [result.data];
       }

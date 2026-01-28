@@ -11,6 +11,7 @@ import { NodeConnectionTypes } from 'n8n-workflow';
 
 import { unifiAccessApiRequest } from './GenericFunctions';
 import { userOperations, userFields } from './UserDescription';
+import { credentialOperations, credentialFields } from './CredentialDescription';
 
 export class UnifiAccess implements INodeType {
 	description: INodeTypeDescription = {
@@ -39,11 +40,17 @@ export class UnifiAccess implements INodeType {
 						name: 'User',
 						value: 'user',
 					},
+          {
+            name: 'Credential',
+            value: 'credential',
+          },
 				],
 				default: 'user',
 			},
 			...userOperations,
       ...userFields,
+      ...credentialOperations,
+      ...credentialFields,
 		]
   };
 
@@ -188,6 +195,34 @@ export class UnifiAccess implements INodeType {
             }
 
 						responseData = await unifiAccessApiRequest.call(this, 'PUT', `users/${userId}/access_policies`, body, qs);
+          }
+
+          // 3.9 Assign a PIN to a User
+          if (operation === 'setPin') {
+            const userId = this.getNodeParameter('userId', i) as string;
+            const pin = this.getNodeParameter('pin', i) as number;
+            body["pin_code"] = pin.toString();
+						responseData = await unifiAccessApiRequest.call(this, 'PUT', `users/${userId}/pin_codes`, body, {});
+          }
+
+          // 3.10 Unassign a PIN from a User
+          if (operation === 'clearPin') {
+            const userId = this.getNodeParameter('userId', i) as string;
+						responseData = await unifiAccessApiRequest.call(this, 'DELETE', `users/${userId}/pin_codes`, {}, {});
+          }
+
+          // 3.23 Delete User
+          if (operation === 'delete') {
+            const userId = this.getNodeParameter('userId', i) as string;
+						responseData = await unifiAccessApiRequest.call(this, 'DELETE', `users/${userId}`, {}, {});
+          }
+        }
+
+        // 6. Credentials
+        if (resource === 'credential') {
+          // 6.1 Generate PIN Code
+          if (operation === 'generatePin') {
+						responseData = await unifiAccessApiRequest.call(this, 'POST', 'credentials/pin_codes', {}, {}, {'resultName': 'pin'});
           }
         }
 

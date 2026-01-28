@@ -19,11 +19,24 @@ export const userOperations: INodeProperties[] = [
         description: 'Assign access policies to a user',
       },
 			{
+				name: 'Clear PIN',
+				value: 'clearPin',
+        // eslint-disable-next-line n8n-nodes-base/node-param-operation-option-action-miscased
+				action: "Clear a user's PIN",
+				description: "Clear a user's PIN",
+			},
+			{
 				name: 'Create',
 				value: 'create',
 				action: 'Create a new user',
 				description: 'Create a new user',
 			},
+      {
+        name: 'Delete',
+        value: 'delete',
+        action: 'Delete a user',
+        description: 'Delete a user',
+      },
 			{
 				name: 'Get',
 				value: 'get',
@@ -35,6 +48,13 @@ export const userOperations: INodeProperties[] = [
 				value: 'getAll',
 				action: 'Get users',
 				description: 'Get many users',
+			},
+			{
+				name: 'Set PIN',
+				value: 'setPin',
+        // eslint-disable-next-line n8n-nodes-base/node-param-operation-option-action-miscased
+				action: "Set a user's PIN",
+				description: "Set a user's PIN",
 			},
       {
         name: 'Update',
@@ -57,7 +77,7 @@ export const userFields: INodeProperties[] = [
 		displayOptions: { 
       show: {
         resource: ['user'],
-        operation: ['get', 'update', 'assignAccessPolicy']
+        operation: ['get', 'update', 'assignAccessPolicy', 'setPin', 'clearPin', 'delete']
       },
     },
 		description: "The user's ID",
@@ -265,5 +285,36 @@ export const userFields: INodeProperties[] = [
         operation: ['assignAccessPolicy'],
       },
     },
+    description: "Whether to overwrite or append the user's access policies"
+  },
+  {
+    displayName: 'PIN Code',
+    name: 'pin',
+    type: 'number',
+    required: true,
+    default: 0,
+    displayOptions: {
+      show: {
+        resource: ['user'],
+        operation: ['setPin'],
+      },
+    },
+    typeOptions: {
+      minValue: 0,
+      step: 1,
+    },
+    description: 'The PIN code to assign to the user',
+  },
+  {
+    displayName: "The user must be deactivated before it can be deleted. Use the Update operation to change a user's status.",
+    name: 'deleteNotice',
+    type: 'notice',
+    displayOptions: {
+      show: {
+        resource: ['user'],
+        operation: ['delete'],
+      },
+    },
+    default: '',
   },
 ];
