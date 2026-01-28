@@ -12,6 +12,7 @@ import { NodeConnectionTypes } from 'n8n-workflow';
 import { unifiAccessApiRequest } from './GenericFunctions';
 import { userOperations, userFields } from './UserDescription';
 import { credentialOperations, credentialFields } from './CredentialDescription';
+import { deviceOperations, deviceFields } from './DeviceDescription';
 
 export class UnifiAccess implements INodeType {
 	description: INodeTypeDescription = {
@@ -44,6 +45,10 @@ export class UnifiAccess implements INodeType {
             name: 'Credential',
             value: 'credential',
           },
+          {
+            name: 'Device',
+            value: 'device',
+          },
 				],
 				default: 'user',
 			},
@@ -51,6 +56,8 @@ export class UnifiAccess implements INodeType {
       ...userFields,
       ...credentialOperations,
       ...credentialFields,
+			...deviceOperations,
+      ...deviceFields,
 		]
   };
 
@@ -223,6 +230,21 @@ export class UnifiAccess implements INodeType {
           // 6.1 Generate PIN Code
           if (operation === 'generatePin') {
 						responseData = await unifiAccessApiRequest.call(this, 'POST', 'credentials/pin_codes', {}, {}, {'resultName': 'pin'});
+          }
+        }
+
+        // 8. Devices
+        if (resource === 'device') {
+          // 8.1 Fetch Devices
+          if (operation === 'getAll') {
+						const grouped = await unifiAccessApiRequest.call(this, 'GET', 'devices', {}, {});
+            const flat = grouped.flat();
+            const byId = new Map<string, IDataObject>();
+            for (const d of flat) {
+              const id = d.id as string;
+              if (id) byId.set(id, d);
+            }
+            responseData = [...byId.values()];
           }
         }
 
