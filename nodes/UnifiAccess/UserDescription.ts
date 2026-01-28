@@ -296,9 +296,9 @@ export const userFields: INodeProperties[] = [
   {
     displayName: 'PIN Code',
     name: 'pin',
-    type: 'number',
+    type: 'string',
     required: true,
-    default: 0,
+    default: '',
     displayOptions: {
       show: {
         resource: ['user'],
@@ -306,8 +306,6 @@ export const userFields: INodeProperties[] = [
       },
     },
     typeOptions: {
-      minValue: 0,
-      step: 1,
       password: true,
     },
     description: 'The PIN code to assign to the user',

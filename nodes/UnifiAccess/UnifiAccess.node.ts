@@ -8,7 +8,7 @@ import type {
   INodeTypeDescription, 
   JsonObject,
 } from 'n8n-workflow';
-import { sleep, NodeApiError, NodeConnectionTypes } from 'n8n-workflow';
+import { sleep, NodeOperationError, NodeConnectionTypes } from 'n8n-workflow';
 
 import { unifiAccessApiRequest } from './GenericFunctions';
 import { userOperations, userFields } from './UserDescription';
@@ -243,7 +243,10 @@ export class UnifiAccess implements INodeType {
           // 3.9 Assign a PIN to a User
           if (operation === 'setPin') {
             const userId = this.getNodeParameter('userId', i) as string;
-            const pin = this.getNodeParameter('pin', i) as number;
+            const pin = this.getNodeParameter('pin', i) as string;
+            if (!/^\d+$/.test(pin)) {
+	            throw new NodeOperationError(this.getNode(), 'PIN must contain digits only (0–9).', { itemIndex: i });
+            }
             body["pin_code"] = pin.toString();
 						responseData = await unifiAccessApiRequest.call(this, 'PUT', `users/${userId}/pin_codes`, body, {});
           }
@@ -337,7 +340,7 @@ export class UnifiAccess implements INodeType {
                 message: result[0].code as string,
                 description: result[0].msg as string,
               };
-              throw new NodeApiError(this.getNode(), {'message': result[0].code as string} as JsonObject, errorOptions);
+              throw new NodeOperationError(this.getNode(), {'message': result[0].code as string} as JsonObject, errorOptions);
             }
           }
 
