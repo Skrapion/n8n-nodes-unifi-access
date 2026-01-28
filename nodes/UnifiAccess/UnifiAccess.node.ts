@@ -6,14 +6,19 @@ import type {
   INodePropertyOptions,
   INodeType,
   INodeTypeDescription, 
+  JsonObject,
 } from 'n8n-workflow';
-import { NodeConnectionTypes } from 'n8n-workflow';
+import { sleep, NodeApiError, NodeConnectionTypes } from 'n8n-workflow';
 
 import { unifiAccessApiRequest } from './GenericFunctions';
 import { userOperations, userFields } from './UserDescription';
 import { accessPolicyOperations, accessPolicyFields } from './AccessPolicyDescription';
 import { credentialOperations, credentialFields } from './CredentialDescription';
 import { deviceOperations, deviceFields } from './DeviceDescription';
+
+/*function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}*/
 
 export class UnifiAccess implements INodeType {
 	description: INodeTypeDescription = {
@@ -80,6 +85,30 @@ export class UnifiAccess implements INodeType {
           returnData.push({
             name: accessPolicyName,
             value: accessPolicyId,
+          });
+        }
+        return returnData;
+      },
+
+      async getDevices(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+        const returnData: INodePropertyOptions[] = [];
+        const grouped = await unifiAccessApiRequest.call(this, 'GET', 'devices', {});
+
+        const flat = grouped.flat();
+        const byId = new Map<string, IDataObject>();
+        for (const d of flat) {
+          const id = d.id as string;
+          if (id) byId.set(id, d);
+        }
+        const devices = [...byId.values()];
+
+        for (const device of devices) {
+          const deviceName = (device.alias || device.name) as string;
+          const deviceId = device.id as string;
+
+          returnData.push({
+            name: deviceName,
+            value: deviceId,
           });
         }
         return returnData;
@@ -265,6 +294,51 @@ export class UnifiAccess implements INodeType {
           // 6.1 Generate PIN Code
           if (operation === 'generatePin') {
 						responseData = await unifiAccessApiRequest.call(this, 'POST', 'credentials/pin_codes', {}, {}, {'resultName': 'pin'});
+          }
+
+          // 6.2-6.5 Enroll NFC Card
+          // The process of enrolling an NFC card is defined in section 6.5 of the API docs.
+          if (operation === 'enrollNfc') {
+            const deviceId = this.getNodeParameter('deviceId', i) as string;
+            const resetNfc = this.getNodeParameter('resetNfc', i) as string;
+
+            const options = this.getNodeParameter('optionsEnrollNfc', i) as IDataObject;
+            const maxWaitTime = options.maxWaitTime as number ?? 15;
+
+            body["device_id"] = deviceId;
+            if (resetNfc) {
+              body["reset_ua_card"] = true;
+            }
+
+            // First get a sessoin_id
+						const sessionResponse = await unifiAccessApiRequest.call(this, 'POST', 'credentials/nfc_cards/sessions', body, {});
+
+            // Now poll the session until the poll token isn't empty.
+            let result : IDataObject[] = [];
+            let delay: number = 0;
+            while (delay < maxWaitTime &&
+              (result.length == 0 ||
+                result[0].code == "CODE_CREDS_NFC_READ_POLL_TOKEN_EMPTY"))
+            {
+              // The API specifies 1-second polling intervals.
+              await sleep(1000);
+              delay += 1;
+              result = await unifiAccessApiRequest.call(this, 'GET', `credentials/nfc_cards/sessions/${sessionResponse[0].session_id}`, {}, {}, {returnRaw: true});
+            }
+
+            // Delete the session_id before returning.
+            await unifiAccessApiRequest.call(this, 'DELETE', `credentials/nfc_cards/sessions/${sessionResponse[0].session_id}`);
+
+            // Return the session result if it didn't time out, or throw an error.
+            if (result && result[0].code != "CODE_CREDS_NFC_READ_POLL_TOKEN_EMPTY") {
+              responseData = result[0].data;
+            } else {
+              const errorOptions = {
+                message: result[0].code as string,
+                description: result[0].msg as string,
+              };
+              throw new NodeApiError(this.getNode(), {'message': result[0].code as string} as JsonObject, errorOptions);
+            }
           }
 
           // 6.7 Fetch NFC Card

@@ -55,8 +55,13 @@ export async function unifiAccessApiRequest(
 		throw new NodeApiError(this.getNode(), error as JsonObject);
 	}
 
+  //console.log("Result: ", util.inspect(result, {depth: null, colors: true}));
+
+  if (option.returnRaw) {
+    return [result];
+  }
+
   if (result.code == "SUCCESS") {
-    //console.log("Result: ", util.inspect(result, {depth: null, colors: true}));
     if (result.data) {
       if (Array.isArray(result.data)) {
         if (result.data.length == 0) {
