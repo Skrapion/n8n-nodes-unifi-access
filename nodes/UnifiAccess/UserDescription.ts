@@ -50,6 +50,12 @@ export const userOperations: INodeProperties[] = [
 				description: 'Get users',
 			},
 			{
+				name: 'Send UniFi Identity Invitations',
+				value: 'sendInvitations',
+        // eslint-disable-next-line n8n-nodes-base/node-param-operation-option-action-miscased
+				action: 'Send UniFi Identity invitations',
+			},
+			{
 				name: 'Set PIN',
 				value: 'setPin',
         // eslint-disable-next-line n8n-nodes-base/node-param-operation-option-action-miscased
@@ -318,4 +324,44 @@ export const userFields: INodeProperties[] = [
     },
     default: '',
   },
+	{
+		displayName: 'Invitations',
+		name: 'invitations',
+		type: 'fixedCollection',
+    placeholder: 'Add Invitation',
+		default: [],
+		displayOptions: { 
+      show: {
+        resource: ['user'],
+        operation: ['sendInvitations'],
+      },
+    },
+    typeOptions: {
+      multipleValues: true,
+    },
+    options: [
+      {
+        displayName: 'Invitation',
+        name: 'invitation',
+        values: [
+          {
+            displayName: 'User ID',
+            name: 'userId',
+            type: 'string',
+            default: '',
+            required: true,
+          },
+          {
+            displayName: 'Email',
+            name: 'email',
+            type: 'string',
+            default: '',
+            placeholder: 'name@email.com',
+            description: "If an email it set, it will also update the user's email"
+          },
+        ],
+      },
+    ],
+    description: 'The invitations to send',
+	},
 ];

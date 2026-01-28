@@ -14,7 +14,6 @@ import { userOperations, userFields } from './UserDescription';
 import { accessPolicyOperations, accessPolicyFields } from './AccessPolicyDescription';
 import { credentialOperations, credentialFields } from './CredentialDescription';
 import { deviceOperations, deviceFields } from './DeviceDescription';
-import { identityOperations, identityFields } from './IdentityDescription';
 
 export class UnifiAccess implements INodeType {
 	description: INodeTypeDescription = {
@@ -39,6 +38,10 @@ export class UnifiAccess implements INodeType {
 				type: 'options',
 				noDataExpression: true,
 				options: [
+					{
+						name: 'User',
+						value: 'user',
+					},
           {
             name: 'Access Policy',
             value: 'accessPolicy',
@@ -51,14 +54,6 @@ export class UnifiAccess implements INodeType {
             name: 'Device',
             value: 'device',
           },
-          {
-            name: 'Identity',
-            value: 'identity',
-          },
-					{
-						name: 'User',
-						value: 'user',
-					},
 				],
 				default: 'user',
 			},
@@ -70,8 +65,6 @@ export class UnifiAccess implements INodeType {
       ...credentialFields,
 			...deviceOperations,
       ...deviceFields,
-      ...identityOperations,
-      ...identityFields,
 		]
   };
 
@@ -237,6 +230,34 @@ export class UnifiAccess implements INodeType {
             const userId = this.getNodeParameter('userId', i) as string;
 						responseData = await unifiAccessApiRequest.call(this, 'DELETE', `users/${userId}`, {}, {});
           }
+          
+          // 10. UniFi Identity
+          //     This is included in this setion because it's in the /users/ space.
+          // 10.1 Send UniFi Identity Invitations
+          if (operation === 'sendInvitations') {
+            type InvitationParam = {
+              invitation: Array<{
+                userId: string;
+                email?: string;
+              }>;
+            };
+
+            const raw = this.getNodeParameter('invitations', i, {}) as InvitationParam;
+
+            const body: IDataObject[] = (raw.invitation ?? []).map((inv) => {
+              const item: IDataObject = {
+                user_id: inv.userId,
+              };
+
+              if (inv.email) {
+                item.email = inv.email;
+              }
+
+              return item;
+            });
+
+						responseData = await unifiAccessApiRequest.call(this, 'POST', 'users/identity/invitations', body, {});
+          }
         }
 
         // 6. Credentials
@@ -293,35 +314,6 @@ export class UnifiAccess implements INodeType {
               if (id) byId.set(id, d);
             }
             responseData = [...byId.values()];
-          }
-        }
-
-        // 10. Identity
-        if (resource === 'identity') {
-          // 10.1 Send UniFi Identity Invitations
-          if (operation === 'sendInvitations') {
-            type InvitationParam = {
-              invitation: Array<{
-                userId: string;
-                email?: string;
-              }>;
-            };
-
-            const raw = this.getNodeParameter('invitations', i, {}) as InvitationParam;
-
-            const body: IDataObject[] = (raw.invitation ?? []).map((inv) => {
-              const item: IDataObject = {
-                user_id: inv.userId,
-              };
-
-              if (inv.email) {
-                item.email = inv.email;
-              }
-
-              return item;
-            });
-
-						responseData = await unifiAccessApiRequest.call(this, 'POST', 'users/identity/invitations', body, {});
           }
         }
 
