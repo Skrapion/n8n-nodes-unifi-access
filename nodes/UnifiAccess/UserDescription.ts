@@ -239,10 +239,9 @@ export const userFields: INodeProperties[] = [
     },
   },
   {
-    displayName: 'Access Policy IDs',
+    displayName: 'Access Policy Names or IDs',
     name: 'accessPolicyIds',
-    type: 'fixedCollection',
-    placeholder: 'Add Policy',
+    type: 'multiOptions',
     default: [],
     displayOptions: {
       show: {
@@ -251,23 +250,9 @@ export const userFields: INodeProperties[] = [
       },
     },
     typeOptions: {
-      multipleValues: true,
+      loadOptionsMethod: 'getAccessPolicies',
     },
-    options: [
-      {
-        displayName: 'Access Policy IDs',
-        name: 'accessPolicy',
-        values: [
-          {
-            displayName: 'Access Policy ID',
-            name: 'accessPolicyId',
-            type: 'string',
-            default: '',
-          }
-        ],
-      },
-    ],
-    description: 'The IDs of the access policies to assign to the user',
+    description: 'The access policies to assign to the user. Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
   },
   {
     displayName: 'Overwrite Existing Policies',
