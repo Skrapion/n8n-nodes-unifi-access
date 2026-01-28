@@ -302,6 +302,7 @@ export const userFields: INodeProperties[] = [
     typeOptions: {
       minValue: 0,
       step: 1,
+      password: true,
     },
     description: 'The PIN code to assign to the user',
   },

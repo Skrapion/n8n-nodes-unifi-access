@@ -11,6 +11,7 @@ import { NodeConnectionTypes } from 'n8n-workflow';
 
 import { unifiAccessApiRequest } from './GenericFunctions';
 import { userOperations, userFields } from './UserDescription';
+import { accessPolicyOperations, accessPolicyFields } from './AccessPolicyDescription';
 import { credentialOperations, credentialFields } from './CredentialDescription';
 import { deviceOperations, deviceFields } from './DeviceDescription';
 
@@ -42,6 +43,10 @@ export class UnifiAccess implements INodeType {
 						value: 'user',
 					},
           {
+            name: 'Access Policy',
+            value: 'accessPolicy',
+          },
+          {
             name: 'Credential',
             value: 'credential',
           },
@@ -54,6 +59,8 @@ export class UnifiAccess implements INodeType {
 			},
 			...userOperations,
       ...userFields,
+      ...accessPolicyOperations,
+      ...accessPolicyFields,
       ...credentialOperations,
       ...credentialFields,
 			...deviceOperations,
@@ -230,6 +237,40 @@ export class UnifiAccess implements INodeType {
           // 6.1 Generate PIN Code
           if (operation === 'generatePin') {
 						responseData = await unifiAccessApiRequest.call(this, 'POST', 'credentials/pin_codes', {}, {}, {'resultName': 'pin'});
+          }
+
+          // 6.7 Fetch NFC Card
+          if (operation === 'getNfc') {
+            const nfcToken = this.getNodeParameter('nfcToken', i) as string;
+						responseData = await unifiAccessApiRequest.call(this, 'GET', `credentials/nfc_cards/tokens/${nfcToken}`, {}, {});
+          }
+
+          // 6.8 Fetch All NFC Cards
+          if (operation === 'getAllNfcs') {
+            const {
+              limit,
+            } = this.getNodeParameter('optionsGetAllNfcs', i, {}) as {
+              limit: number;
+            };
+            if (limit) {
+              qs["page_num"] = 1;
+              qs["page_size"] = limit;
+            }
+						responseData = await unifiAccessApiRequest.call(this, 'GET', 'credentials/nfc_cards/tokens', {}, qs);
+          }
+        }
+
+        // 5. Access Policies
+        if (resource === 'accessPolicy') {
+          // 5.5 Fetch Access Policy
+          if (operation === 'get') {
+            const accessPolicyId = this.getNodeParameter('accessPolicyId', i) as string;
+						responseData = await unifiAccessApiRequest.call(this, 'GET', `access_policies/${accessPolicyId}`, {}, {});
+          }
+
+          // 5.6 Fetch All Access Policies
+          if (operation === 'getAll') {
+						responseData = await unifiAccessApiRequest.call(this, 'GET', `access_policies`, {}, {});
           }
         }
 
