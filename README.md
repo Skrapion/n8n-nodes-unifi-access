@@ -1,8 +1,8 @@
 # n8n-nodes-unifi-access
 
-This is an n8n community node. It lets you use the Unifi Access API in your n8n workflows.
+This is an n8n community node. It lets you use the UniFi Access API in your n8n workflows.
 
-Unifi Access is a door control system in the Ubiquiti ecosystem. This node allows you to manage
+UniFi Access is a door control system in the Ubiquiti ecosystem. This node allows you to manage
 users, access policies, NFC cards, etc.
 
 [n8n](https://n8n.io/) is a [fair-code licensed](https://docs.n8n.io/sustainable-use-license/) workflow automation platform.
@@ -34,4 +34,4 @@ _State the minimum n8n version, as well as which versions you test against. You 
 ## Resources
 
 * [n8n community nodes documentation](https://docs.n8n.io/integrations/#community-nodes)
-* [Unifi Access API Documentation](https://assets.identity.ui.com/unifi-access/api_reference.pdf)
+* [UniFi Access API Documentation](https://assets.identity.ui.com/unifi-access/api_reference.pdf)

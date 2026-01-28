@@ -17,15 +17,15 @@ import { deviceOperations, deviceFields } from './DeviceDescription';
 
 export class UnifiAccess implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'Unifi Access',
+		displayName: 'UniFi Access',
 		name: 'unifiAccess',
 		icon: { light: 'file:unifiAccess.svg', dark: 'file:unifiAccess.dark.svg' },
 		group: ['output'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Interact with the Unifi Access API',
+		description: 'Interact with the UniFi Access API',
 		defaults: {
-			name: 'Unifi Access',
+			name: 'UniFi Access',
 		},
 		usableAsTool: true,
 		inputs: [NodeConnectionTypes.Main],
