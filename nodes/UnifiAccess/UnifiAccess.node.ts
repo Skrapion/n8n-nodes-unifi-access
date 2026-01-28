@@ -392,7 +392,7 @@ export class UnifiAccess implements INodeType {
           if (operation === 'deleteNfc') {
             const nfcToken = this.getNodeParameter('nfcToken', i) as string;
             
-						responseData = await unifiAccessApiRequest.call(this, 'DELETE', `credentials/nfc_cards/tokens${nfcToken}`, {}, {});
+						responseData = await unifiAccessApiRequest.call(this, 'DELETE', `credentials/nfc_cards/tokens/${nfcToken}`, {}, {});
           }
         }
 
