@@ -240,6 +240,30 @@ export class UnifiAccess implements INodeType {
 						responseData = await unifiAccessApiRequest.call(this, 'PUT', `users/${userId}/access_policies`, body, qs);
           }
 
+          // 3.7 Assign an NFC Card to a User
+          if (operation === 'assignNfc') {
+            const userId = this.getNodeParameter('userId', i) as string;
+            const token = this.getNodeParameter('token', i) as string;
+            const forceAdd = this.getNodeParameter('forceAdd', i) as boolean;
+
+            body['token'] = token;
+            if (forceAdd) {
+              body['force_add'] = true;
+            }
+
+						responseData = await unifiAccessApiRequest.call(this, 'PUT', `users/${userId}/nfc_cards`, body, {});
+          }
+
+          // 3.8 Unassign an NFC Card from a User
+          if (operation === 'assignNfc') {
+            const userId = this.getNodeParameter('userId', i) as string;
+            const token = this.getNodeParameter('token', i) as string;
+
+            body['token'] = token;
+
+						responseData = await unifiAccessApiRequest.call(this, 'PUT', `users/${userId}/nfc_cards/delete`, body, {});
+          }
+
           // 3.9 Assign a PIN to a User
           if (operation === 'setPin') {
             const userId = this.getNodeParameter('userId', i) as string;
@@ -362,6 +386,13 @@ export class UnifiAccess implements INodeType {
               qs["page_size"] = limit;
             }
 						responseData = await unifiAccessApiRequest.call(this, 'GET', 'credentials/nfc_cards/tokens', {}, qs);
+          }
+
+          // 6.9 Delete NFC Card
+          if (operation === 'deleteNfc') {
+            const nfcToken = this.getNodeParameter('nfcToken', i) as string;
+            
+						responseData = await unifiAccessApiRequest.call(this, 'DELETE', `credentials/nfc_cards/tokens${nfcToken}`, {}, {});
           }
         }
 

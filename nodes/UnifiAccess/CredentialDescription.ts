@@ -12,6 +12,12 @@ export const credentialOperations: INodeProperties[] = [
       },
 		},
 		options: [
+			{
+				name: 'Delete NFC Card',
+				value: 'deleteNfc',
+				action: 'Delete an NFC card',
+				description: 'Delete an NFC card',
+			},
       {
         name: 'Enroll NFC Card',
         value: 'enrollNfc',
@@ -25,18 +31,16 @@ export const credentialOperations: INodeProperties[] = [
         description: 'Generate a random PIN',
       },
 			{
-				name: 'Get NFC Card',
-				value: 'getNfc',
-        // eslint-disable-next-line n8n-nodes-base/node-param-operation-option-action-miscased
-				action: 'Get an NFC Card',
-				description: 'Get an NFC Card',
-			},
-			{
 				name: 'Get Many NFC Cards',
 				value: 'getAllNfcs',
-        // eslint-disable-next-line n8n-nodes-base/node-param-operation-option-action-miscased
-				action: 'Get NFC Cards',
-				description: 'Get NFC Cards',
+				action: 'Get NFC cards',
+				description: 'Get NFC cards',
+			},
+			{
+				name: 'Get NFC Card',
+				value: 'getNfc',
+				action: 'Get an NFC card',
+				description: 'Get an NFC card',
 			},
     ],
 		default: 'generatePin',
@@ -110,7 +114,7 @@ export const credentialFields: INodeProperties[] = [
 		displayOptions: { 
       show: {
         resource: ['credential'],
-        operation: ['getNfc'],
+        operation: ['getNfc', 'deleteNfc'],
       },
     },
     typeOptions: {

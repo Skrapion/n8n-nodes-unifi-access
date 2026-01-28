@@ -18,6 +18,12 @@ export const userOperations: INodeProperties[] = [
         action: 'Assign access policies to a user',
         description: 'Assign access policies to a user',
       },
+      {
+        name: 'Assign NFC Card',
+        value: 'assignNfc',
+        action: 'Assign an NFC card to a user',
+        description: 'Assign an NFC card to a user',
+      },
 			{
 				name: 'Clear PIN',
 				value: 'clearPin',
@@ -63,6 +69,12 @@ export const userOperations: INodeProperties[] = [
 				description: "Set a user's PIN",
 			},
       {
+        name: 'Unassign NFC Card',
+        value: 'unassignNfc',
+        action: 'Unssign an NFC card from a user',
+        description: 'Unssign an NFC card from a user',
+      },
+      {
         name: 'Update',
         value: 'update',
         action: 'Update a user',
@@ -83,7 +95,16 @@ export const userFields: INodeProperties[] = [
 		displayOptions: { 
       show: {
         resource: ['user'],
-        operation: ['get', 'update', 'assignAccessPolicy', 'setPin', 'clearPin', 'delete']
+        operation: [
+          'get', 
+          'update', 
+          'assignAccessPolicy', 
+          'assignNfc', 
+          'unassignNfc', 
+          'setPin', 
+          'clearPin', 
+          'delete'
+        ]
       },
     },
 		description: "The user's ID",
@@ -292,6 +313,36 @@ export const userFields: INodeProperties[] = [
       },
     },
     description: "Whether to overwrite or append the user's access policies"
+  },
+  {
+    displayName: 'NFC Token',
+    name: 'token',
+    type: 'string',
+    required: true,
+    default: '',
+    displayOptions: {
+      show: {
+        resource: ['user'],
+        operation: ['assignNfc', 'unassignNfc'],
+      },
+    },
+    typeOptions: {
+      password: true,
+    },
+    description: 'The NFC token assigned to the user',
+  },
+  {
+    displayName: 'Force Add',
+    name: 'forceAdd',
+    type: 'boolean',
+    default: false,
+    displayOptions: {
+      show: {
+        resource: ['user'],
+        operation: ['assignNfc'],
+      },
+    },
+    description: 'Whether to overwrite and NFC token which has already been asigned',
   },
   {
     displayName: 'PIN Code',
