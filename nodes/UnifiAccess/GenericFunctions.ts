@@ -14,7 +14,7 @@ export async function unifiAccessApiRequest(
 	method: IHttpRequestMethods,
 	url: string,
 
-	body: IDataObject = {},
+	body: IDataObject | IDataObject[] = {},
 	qs: IDataObject = {},
 	option: IDataObject = {},
 ): Promise<IDataObject[]> {
@@ -56,10 +56,14 @@ export async function unifiAccessApiRequest(
 	}
 
   if (result.code == "SUCCESS") {
-    //console.log("Result.data: ", util.inspect(result.data, {depth: null, colors: true}));
+    //console.log("Result: ", util.inspect(result, {depth: null, colors: true}));
     if (result.data) {
       if (Array.isArray(result.data)) {
-        return result.data;
+        if (result.data.length == 0) {
+          return [{}];
+        } else {
+          return result.data;
+        }
       } else if (option.resultName) {
         return [{[option.resultName as string]: result.data}];
       } else {
