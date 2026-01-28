@@ -11,9 +11,7 @@ users, access policies, NFC cards, etc.
 [Operations](#operations)
 [Credentials](#credentials)
 [Compatibility](#compatibility)
-[Usage](#usage)
 [Resources](#resources)
-[Version history](#version-history)
 
 ## Installation
 
@@ -21,7 +19,9 @@ Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes
 
 ## Operations
 
-_List the operations supported by your node._
+Currently support the nodes necessary to manage individual users as well as their access policies and credentials.
+
+Supports NFCs, PINs, and UniFi Identity invites. It also supports enrolling NFCs with a reader.
 
 ## Credentials
 
@@ -29,7 +29,7 @@ Create a new API token in the Settings->General section of the Access dashboard.
 
 ## Compatibility
 
-_State the minimum n8n version, as well as which versions you test against. You can also include any known version incompatibility issues._
+Tested again n8n 2.4.8 and UniFi Access 4.1.15.
 
 ## Resources
 
