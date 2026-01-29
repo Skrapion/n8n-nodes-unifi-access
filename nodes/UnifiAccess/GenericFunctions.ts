@@ -1,5 +1,6 @@
 import type {
 	IExecuteFunctions,
+  IHookFunctions,
 	ILoadOptionsFunctions,
 	IDataObject,
 	JsonObject,
@@ -10,7 +11,7 @@ import { NodeApiError } from 'n8n-workflow';
 //import util from 'util';
 
 export async function unifiAccessApiRequest(
-	this: IExecuteFunctions | ILoadOptionsFunctions,
+	this: IExecuteFunctions | ILoadOptionsFunctions | IHookFunctions,
 	method: IHttpRequestMethods,
 	url: string,
 

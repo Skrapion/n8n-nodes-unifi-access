@@ -1,0 +1,18 @@
+{
+	"node": "n8n-nodes-unifi-accessTrigger",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Development", "Developer Tools", "Utility"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://github.com/Skrapion/n8n-nodes-unifi-access"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/Skrapion/n8n-nodes-unifi-access"
+			}
+		]
+	}
+}

@@ -34,7 +34,8 @@
       "dist/credentials/UnifiAccessApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/UnifiAccess/UnifiAccess.node.js"
+      "dist/nodes/UnifiAccess/UnifiAccess.node.js",
+      "dist/nodes/UnifiAccess/UnifiAccessTrigger.node.js"
     ]
   },
   "devDependencies": {
