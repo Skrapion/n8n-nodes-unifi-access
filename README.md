@@ -42,6 +42,8 @@ Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes
   * Get an NFC card
 * Device Actions
   * Get devices
+* Triggers
+  * UniFi Access Trigger
 
 ## Credentials
 
