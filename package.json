@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-unifi-access",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "n8n node for accessing the UniFi Access API",
   "license": "MIT",
   "homepage": "",
