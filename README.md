@@ -9,6 +9,7 @@ users, access policies, NFC cards, etc.
 
 [Installation](#installation)
 [Operations](#operations)
+[Triggers](#triggers)
 [Credentials](#credentials)
 [Compatibility](#compatibility)
 [Resources](#resources)
@@ -19,6 +20,22 @@ Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes
 
 ## Operations
 
+* Access Policy Actions
+  * Get an access policy
+  * Get access policies
+* Credential Actions
+  * Delete an NFC card
+  * Enroll an NFC card
+  * Generate a random PIN
+  * Get NFC cards
+  * Get an NFC card
+* Device Actions
+  * Get devices
+* Notification Actions
+  * Add a webhook
+  * Delete a webhook
+  * Get webhooks
+  * Update a webhook
 * User Actions
   * Assign access policies to a user
   * Assign NFC card to a user
@@ -31,19 +48,19 @@ Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes
   * Set a user's PIN
   * Unassign an NFC card from a user
   * Update a user
-* Access Policy Actions
-  * Get an access policy
-  * Get access policies
-* Credential Actions
-  * Delete an NFC card
-  * Enroll an NFC card
-  * Generate a random PIN
-  * Get NFC cards
-  * Get an NFC card
-* Device Actions
-  * Get devices
-* Triggers
-  * UniFi Access Trigger
+
+## Triggers
+* Door Position Change
+* Door Unlock
+* Doorbell Call Incoming
+* Doorbell Event Completed
+* Doorbell Request-to-Enter
+* Emergency Status Change
+* Temporary Unlock End
+* Temporary Unlock Start
+* Unlock Schedule Active
+* Unlock Schedule Inactive
+* Visitor Status Change
 
 ## Credentials
 

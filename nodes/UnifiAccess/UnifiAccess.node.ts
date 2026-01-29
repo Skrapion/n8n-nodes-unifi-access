@@ -15,6 +15,7 @@ import { userOperations, userFields } from './UserDescription';
 import { accessPolicyOperations, accessPolicyFields } from './AccessPolicyDescription';
 import { credentialOperations, credentialFields } from './CredentialDescription';
 import { deviceOperations, deviceFields } from './DeviceDescription';
+import { notificationOperations, notificationFields } from './NotificationDescription';
 
 /*function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -43,10 +44,6 @@ export class UnifiAccess implements INodeType {
 				type: 'options',
 				noDataExpression: true,
 				options: [
-					{
-						name: 'User',
-						value: 'user',
-					},
           {
             name: 'Access Policy',
             value: 'accessPolicy',
@@ -59,6 +56,14 @@ export class UnifiAccess implements INodeType {
             name: 'Device',
             value: 'device',
           },
+          {
+            name: 'Notification',
+            value: 'notification',
+          },
+					{
+						name: 'User',
+						value: 'user',
+					},
 				],
 				default: 'user',
 			},
@@ -70,6 +75,8 @@ export class UnifiAccess implements INodeType {
       ...credentialFields,
 			...deviceOperations,
       ...deviceFields,
+      ...notificationOperations,
+      ...notificationFields,
 		]
   };
 
@@ -422,6 +429,52 @@ export class UnifiAccess implements INodeType {
               if (id) byId.set(id, d);
             }
             responseData = [...byId.values()];
+          }
+        }
+
+        // 11. Notifications
+        if (resource === 'notification') {
+          // 11.3 Fetch Webhook Endpoint List
+          if (operation === 'getAll') {
+						responseData = await unifiAccessApiRequest.call(this, 'GET', 'webhooks/endpoints', {}, {});
+          }
+
+          // 11.4 Add Webhook Endpoint
+          if (operation === 'add') {
+            const name = this.getNodeParameter('name', i) as string;
+            const endpoint = this.getNodeParameter('endpoint', i) as string;
+            const events = this.getNodeParameter('events', i) as string[];
+
+            const body = {
+              name: name,
+              endpoint: endpoint,
+              events: events,
+            };
+
+						responseData = await unifiAccessApiRequest.call(this, 'POST', 'webhooks/endpoints', body, {});
+          }
+
+          // 11.5 Update Webhook Endpoint
+          if (operation === 'update') {
+            const webhookId = this.getNodeParameter('webhookId', i) as string;
+            const name = this.getNodeParameter('name', i) as string;
+            const endpoint = this.getNodeParameter('endpoint', i) as string;
+            const events = this.getNodeParameter('events', i) as string[];
+
+            const body = {
+              name: name,
+              endpoint: endpoint,
+              events: events,
+            };
+
+						responseData = await unifiAccessApiRequest.call(this, 'PUT', `webhooks/endpoints/${webhookId}`, body, {});
+          }
+
+          // 11.6 Delete Webhook Endpoint
+          if (operation === 'delete') {
+            const webhookId = this.getNodeParameter('webhookId', i) as string;
+
+						responseData = await unifiAccessApiRequest.call(this, 'DELETE', `webhooks/endpoints/${webhookId}`, body, {});
           }
         }
 
