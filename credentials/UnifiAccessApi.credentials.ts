@@ -11,8 +11,7 @@ export class UnifiAccessApi implements ICredentialType {
 
 	displayName = 'Unifi Access API';
 
-	// Link to your community node's README
-	documentationUrl = 'https://github.com/org/-unifi-access?tab=readme-ov-file#credentials';
+	documentationUrl = 'https://github.com/Skrapion/n8n-nodes-unifi-access'
 
   icon: Icon = {
     light: 'file:../nodes/UnifiAccess/unifiAccess.svg',
