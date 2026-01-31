@@ -10,6 +10,7 @@ import { NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
 
 import { unifiAccessApiRequest } from './GenericFunctions';
 import { eventOptions } from './EventOptions';
+import { verifySignature } from './UnifiAccessTriggerHelpers';
 
 export class UnifiAccessTrigger implements INodeType {
 	description: INodeTypeDescription = {
@@ -117,6 +118,8 @@ export class UnifiAccessTrigger implements INodeType {
 	};
 
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
+    verifySignature.call(this);
+
 		const bodyData = this.getBodyData();
 
 		const returnData: IDataObject[] = [];
