@@ -24,7 +24,7 @@ export function verifySignature(this: IWebhookFunctions): boolean {
 
 	const req = this.getRequestObject();
 
-	// Get the signature from GitHub's header
+	// Get the signature from UniFi's header
 	const signature = req.header('Signature');
 	if (!signature) {
 		return false;

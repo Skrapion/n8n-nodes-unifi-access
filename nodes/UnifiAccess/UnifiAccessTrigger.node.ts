@@ -19,8 +19,7 @@ export class UnifiAccessTrigger implements INodeType {
 		icon: { light: 'file:unifiAccess.svg', dark: 'file:unifiAccess.dark.svg' },
 		group: ['trigger'],
 		version: 1,
-		subtitle:
-			'={{$parameter["owner"] + "/" + $parameter["repository"] + ": " + $parameter["events"].join(", ")}}',
+		subtitle: '={{$parameter["events"].join(", ")}}',
 		description: 'Starts the workflow when UniFi Access events occur',
 		defaults: {
 			name: 'UniFi Access Trigger',
