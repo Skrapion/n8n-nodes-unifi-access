@@ -262,7 +262,7 @@ export class UnifiAccess implements INodeType {
           }
 
           // 3.8 Unassign an NFC Card from a User
-          if (operation === 'assignNfc') {
+          if (operation === 'delete') {
             const userId = this.getNodeParameter('userId', i) as string;
             const token = this.getNodeParameter('token', i) as string;
 
