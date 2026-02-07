@@ -8,7 +8,6 @@ import type {
 	IHttpRequestOptions,
 } from 'n8n-workflow';
 import { NodeApiError } from 'n8n-workflow';
-//import util from 'util';
 
 export async function unifiAccessApiRequest(
 	this: IExecuteFunctions | ILoadOptionsFunctions | IHookFunctions,
@@ -35,13 +34,6 @@ export async function unifiAccessApiRequest(
 		json: true,
 	};
 
-  /*
-  console.log("Url: ", options.url);
-  console.log("Body: ", JSON.stringify(options.body));
-  console.log("Method: ", options.method);
-  console.log("qs: ", JSON.stringify(options.qs));
-  */
-
 	options = Object.assign({}, options, option);
 	if (Object.keys(options.body as IDataObject).length === 0) {
 		delete options.body;
@@ -55,8 +47,6 @@ export async function unifiAccessApiRequest(
 	} catch (error) {
 		throw new NodeApiError(this.getNode(), error as JsonObject);
 	}
-
-  //console.log("Result: ", util.inspect(result, {depth: null, colors: true}));
 
   if (option.returnRaw) {
     return [result];

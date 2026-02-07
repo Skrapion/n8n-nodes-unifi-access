@@ -17,10 +17,6 @@ import { credentialOperations, credentialFields } from './CredentialDescription'
 import { deviceOperations, deviceFields } from './DeviceDescription';
 import { notificationOperations, notificationFields } from './NotificationDescription';
 
-/*function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}*/
-
 export class UnifiAccess implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'UniFi Access',
