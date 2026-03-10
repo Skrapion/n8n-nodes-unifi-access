@@ -117,7 +117,15 @@ export class UnifiAccessTrigger implements INodeType {
 	};
 
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
-    verifySignature.call(this);
+    // Verify the webhook signature before processing
+		if (!verifySignature.call(this)) {
+			const res = this.getResponseObject();
+			res.status(401).send('Unauthorized').end();
+
+			return {
+				noWebhookResponse: true,
+			};
+		}
 
 		const bodyData = this.getBodyData();
 
